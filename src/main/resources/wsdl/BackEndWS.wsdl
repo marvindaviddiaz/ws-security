@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<wsdl:definitions 
+	xmlns="http://schemas.xmlsoap.org/wsdl/" 
+	xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"
+	xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" 
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:schema="http://dto.eis.backend.hubpagos.bytesw.com/"
+	xmlns:tns="http://dto.eis.backend.hubpagos.bytesw.com/"
+	targetNamespace="http://dto.eis.backend.hubpagos.bytesw.com/"
+	xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" 
+    xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" 
+    xmlns:wsaws="http://www.w3.org/2005/08/addressing" 
+    xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy"
+    xmlns:sp13="http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200802"
+    xmlns:sc="http://schemas.sun.com/2006/03/wss/server" 
+    xmlns:wspp="http://java.sun.com/xml/ns/wsit/policy">
+
+	<!-- Schema Import -->
+
+	<wsdl:types>
+		<xsd:schema>
+			<xsd:import namespace="http://dto.eis.backend.hubpagos.bytesw.com/"
+				schemaLocation="backend.xsd" />
+		</xsd:schema>
+	</wsdl:types>
+
+	<!-- Messages: Request and Response used in portType -->
+
+	<wsdl:message name="GetSessionRequest">
+		<wsdl:part name="parameters" element="schema:GetSessionRequest" />
+	</wsdl:message>
+	<wsdl:message name="GetSessionResponse">
+		<wsdl:part name="parameters" element="schema:GetSessionResponse" />
+	</wsdl:message>
+
+
+	<wsdl:message name="ValidateSessionRequest">
+		<wsdl:part name="parameters" element="schema:ValidateSessionRequest" />
+	</wsdl:message>
+	<wsdl:message name="ValidateSessionResponse">
+		<wsdl:part name="parameters" element="schema:ValidateSessionResponse" />
+	</wsdl:message>
+
+
+	<wsdl:message name="UserAccountsRequest">
+		<wsdl:part name="parameters" element="schema:UserAccountsRequest" />
+	</wsdl:message>
+	<wsdl:message name="UserAccountsResponse">
+		<wsdl:part name="parameters" element="schema:UserAccountsResponse" />
+	</wsdl:message>
+
+
+	<wsdl:message name="SecondAuthenticationRequest">
+		<wsdl:part name="parameters" element="schema:SecondAuthenticationRequest" />
+	</wsdl:message>
+	<wsdl:message name="SecondAuthenticationResponse">
+		<wsdl:part name="parameters" element="schema:SecondAuthenticationResponse" />
+	</wsdl:message>
+
+
+	<wsdl:message name="ChargeAccountRequest">
+		<wsdl:part name="parameters" element="schema:ChargeAccountRequest" />
+	</wsdl:message>
+	<wsdl:message name="ChargeAccountResponse">
+		<wsdl:part name="parameters" element="schema:ChargeAccountResponse" />
+	</wsdl:message>
+
+
+	<wsdl:message name="ReverseChargeRequest">
+		<wsdl:part name="parameters" element="schema:ReverseChargeRequest" />
+	</wsdl:message>
+	<wsdl:message name="ReverseChargeResponse">
+		<wsdl:part name="parameters" element="schema:ReverseChargeResponse" />
+	</wsdl:message>
+
+
+	<!-- PortType used en binding -->
+
+	<wsdl:portType name="BackEndEndpoint">
+	
+		<wsdl:operation name="GetSession">
+			<wsdl:input message="tns:GetSessionRequest" />
+			<wsdl:output message="tns:GetSessionResponse" />
+		</wsdl:operation>
+
+		<wsdl:operation name="ValidateSession">
+			<wsdl:input message="tns:ValidateSessionRequest" />
+			<wsdl:output message="tns:ValidateSessionResponse" />
+		</wsdl:operation>
+
+		<wsdl:operation name="UserAccounts">
+			<wsdl:input message="tns:UserAccountsRequest" />
+			<wsdl:output message="tns:UserAccountsResponse" />
+		</wsdl:operation>
+
+		<wsdl:operation name="SecondAuthentication">
+			<wsdl:input message="tns:SecondAuthenticationRequest" />
+			<wsdl:output message="tns:SecondAuthenticationResponse" />
+		</wsdl:operation>
+
+		<wsdl:operation name="ChargeAccount">
+			<wsdl:input message="tns:ChargeAccountRequest" />
+			<wsdl:output message="tns:ChargeAccountResponse" />
+		</wsdl:operation>
+
+		<wsdl:operation name="ReverseCharge">
+			<wsdl:input message="tns:ReverseChargeRequest" />
+			<wsdl:output message="tns:ReverseChargeResponse" />
+		</wsdl:operation>
+
+
+	</wsdl:portType>
+
+	<!-- Binding: operations -->
+
+	<wsdl:binding name="BackEndHTTPPortBinding" type="tns:BackEndEndpoint">
+		<soap:binding style="document"
+			transport="http://schemas.xmlsoap.org/soap/http" />
+			
+		<wsdl:operation name="GetSession">
+			<soap:operation soapAction="http://backend.hubpagos.bytesw.com/GetSession" />
+			<wsdl:input>
+				<soap:body use="literal" />
+				<wsp:PolicyReference URI="#GetSessionInputPolicy"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+				<wsp:PolicyReference URI="#GetSessionOutputPolicy"/>
+			</wsdl:output>
+		</wsdl:operation>
+
+		<wsdl:operation name="ValidateSession">
+			<soap:operation soapAction="http://backend.hubpagos.bytesw.com/ValidateSession" />
+			<wsdl:input>
+				<soap:body use="literal" />
+				<wsp:PolicyReference URI="#SecurityInputPolicy"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+				<wsp:PolicyReference URI="#SecurityOutputPolicy"/>
+			</wsdl:output>
+		</wsdl:operation>
+
+		<wsdl:operation name="UserAccounts">
+			<soap:operation soapAction="http://backend.hubpagos.bytesw.com/UserAccounts" />
+			<wsdl:input>
+				<soap:body use="literal" />
+				<wsp:PolicyReference URI="#SecurityInputPolicy"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+				<wsp:PolicyReference URI="#SecurityOutputPolicy"/>
+			</wsdl:output>
+		</wsdl:operation>
+
+		<wsdl:operation name="SecondAuthentication">
+			<soap:operation soapAction="http://backend.hubpagos.bytesw.com/SecondAuthentication" />
+			<wsdl:input>
+				<soap:body use="literal" />
+				<wsp:PolicyReference URI="#SecurityInputPolicy"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+				<wsp:PolicyReference URI="#SecurityOutputPolicy"/>
+			</wsdl:output>
+		</wsdl:operation>
+
+		<wsdl:operation name="ChargeAccount">
+			<soap:operation soapAction="http://backend.hubpagos.bytesw.com/ChargeAccount" />
+			<wsdl:input>
+				<soap:body use="literal" />
+				<wsp:PolicyReference URI="#SecurityInputPolicy"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+				<wsp:PolicyReference URI="#SecurityOutputPolicy"/>
+			</wsdl:output>
+		</wsdl:operation>
+
+		<wsdl:operation name="ReverseCharge">
+			<soap:operation soapAction="http://backend.hubpagos.bytesw.com/ReverseCharge" />
+			<wsdl:input>
+				<soap:body use="literal" />
+				<wsp:PolicyReference URI="#SecurityInputPolicy"/>
+			</wsdl:input>
+			<wsdl:output>
+				<soap:body use="literal" />
+				<wsp:PolicyReference URI="#SecurityOutputPolicy"/>
+			</wsdl:output>
+		</wsdl:operation>
+
+
+	</wsdl:binding>
+
+	<!-- service -->
+
+	<wsdl:service name="BackEndService">
+		<wsdl:port name="BackEndHTTPPort" binding="tns:BackEndHTTPPortBinding">
+			<soap:address
+				location="http://localhost:8080/servicios-hub/services/BackEndWS" />
+		</wsdl:port>
+	</wsdl:service>
+
+
+	<!-- policies -->
+	
+	<wsp:Policy wsu:Id="GetSessionInputPolicy">
+    	<wsp:All>
+    		<sp:UsernameToken sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/AlwaysToRecipient">
+    			<wsp:Policy>
+					<sp:WssUsernameToken11 />
+					<sp:HashPassword />
+					<sp13:Created />
+        			<sp13:Nonce />
+				</wsp:Policy> 
+    		</sp:UsernameToken>
+        	<sp:EncryptedParts>
+            		<sp:Header Name="UsernameToken" Namespace="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"/>
+            </sp:EncryptedParts>
+           	<sp:SignedParts>
+                    <sp:Header Name="UsernameToken" Namespace="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"/>
+            </sp:SignedParts>
+        </wsp:All>
+    </wsp:Policy>
+	<wsp:Policy wsu:Id="GetSessionOutputPolicy">
+        <wsp:All>
+        	<sp:EncryptedParts>
+            		<sp:Body />
+            </sp:EncryptedParts>
+           	<sp:SignedParts>
+                    <sp:Body />
+            </sp:SignedParts>
+        </wsp:All>
+    </wsp:Policy>
+        
+	
+	<wsp:Policy wsu:Id="SecurityInputPolicy">
+    	<wsp:All>
+        	<sp:EncryptedParts>
+            		 <sp:Body />
+            </sp:EncryptedParts>
+           	<sp:SignedParts>
+                     <sp:Body />
+            </sp:SignedParts>
+        </wsp:All>
+    </wsp:Policy>
+	<wsp:Policy wsu:Id="SecurityOutputPolicy">
+        <wsp:All>
+        	<sp:EncryptedParts>
+            		<sp:Body />
+            </sp:EncryptedParts>
+           	<sp:SignedParts>
+                    <sp:Body />
+            </sp:SignedParts>
+        </wsp:All>
+    </wsp:Policy>
+
+</wsdl:definitions>

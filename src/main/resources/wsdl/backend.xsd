@@ -1,0 +1,212 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:tns="http://dto.eis.backend.hubpagos.bytesw.com/"
+	targetNamespace="http://dto.eis.backend.hubpagos.bytesw.com/" version="1.0">
+
+
+	<!-- GET_SESSION -->
+
+	<xs:element name="GetSessionRequest">
+		<xs:complexType>
+			<xs:sequence>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="GetSessionResponse">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="error" type="tns:error" nillable="true"/>
+				<xs:element name="sesionId" type="xs:string" nillable="true"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	<!-- VALIDATE_SESSION -->
+
+	<xs:element name="ValidateSessionRequest">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="sesionId" type="tns:stringRequiredForty" nillable="false" />
+				<xs:element name="correlativo" type="xs:long" nillable="false" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="ValidateSessionResponse">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="error" type="tns:error" nillable="true"/>
+				<xs:element name="userAlias" type="xs:string" nillable="true"/>
+				<xs:element name="metodoAutenticacion" type="xs:int" nillable="true"/>
+				<xs:element name="cordenada1" type="xs:string" nillable="true"/>
+				<xs:element name="cordenada2" type="xs:string" nillable="true"/>
+				<xs:element name="cordenada3" type="xs:string" nillable="true"/>
+				<xs:element name="cordenada4" type="xs:string" nillable="true"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<!-- USER_ACCOUNTS -->
+
+	<xs:element name="UserAccountsRequest">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="sesionId" type="tns:stringRequiredForty" />
+				<xs:element name="userAlias" type="tns:stringRequiredForty" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="UserAccountsResponse">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="error" type="tns:error" nillable="true"/>
+				<xs:element name="cuentas" type="tns:cuenta" nillable="true" minOccurs="0" maxOccurs="unbounded" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<!-- SECOND_AUTHENTICATION -->
+
+	<xs:element name="SecondAuthenticationRequest">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="sesionId" type="tns:stringRequiredForty" />
+				<xs:element name="userAlias" type="tns:stringRequiredForty" />
+				<xs:element name="valor1" type="tns:stringRequiredTwentyFive" />
+				<xs:element name="valor2" type="tns:stringTwentyFive" nillable="true"/>
+				<xs:element name="valor3" type="tns:stringTwentyFive" nillable="true"/>
+				<xs:element name="valor4" type="tns:stringTwentyFive" nillable="true"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="SecondAuthenticationResponse">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="error" type="tns:error" nillable="true"/>
+				<xs:element name="autorizacion" type="xs:long" nillable="true"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<!-- CHARGE_ACCOUNT -->
+
+	<xs:element name="ChargeAccountRequest">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="sesionId" type="tns:stringRequiredForty" />
+				<xs:element name="userAlias" type="tns:stringRequiredForty" />
+				<xs:element name="numeroCuenta" type="xs:integer" nillable="false" />
+				<xs:element name="producto" type="xs:int" nillable="false"/>
+				<xs:element name="moneda" type="tns:stringRequiredThree" />
+				<xs:element name="fechaVencimientoTC" type="xs:int" nillable="true"/>
+				<xs:element name="cvv2" type="xs:int" nillable="true"/>
+				<xs:element name="montoSinImpuesto" type="xs:decimal" nillable="false"/>
+				<xs:element name="impuesto" type="xs:decimal" nillable="false"/>
+				<xs:element name="totalDebitar" type="xs:decimal" nillable="false"/>
+				<xs:element name="cobranza" type="xs:int" nillable="false"/>
+				<xs:element name="nombreCobranza" type="tns:stringRequiredSixty" />
+				<xs:element name="idPago" type="tns:stringRequiredTwenty" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="ChargeAccountResponse">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="error" type="tns:error" nillable="true"/>
+				<xs:element name="autorizacion" type="xs:long" nillable="true"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+
+	<!-- REVERSE_CHARGE -->
+
+	<xs:element name="ReverseChargeRequest">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="sesionId" type="tns:stringRequiredForty" />
+				<xs:element name="userAlias" type="tns:stringRequiredForty" />
+				<xs:element name="autorizacionDebito" type="xs:long" nillable="false"/>
+				<xs:element name="motivo" type="tns:stringRequiredOneHundred" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="ReverseChargeResponse">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="error" type="tns:error" nillable="true"/>
+				<xs:element name="autorizacion" type="xs:long" nillable="true"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+
+
+	<!-- COMMONS -->
+
+
+	<xs:complexType name="error">
+		<xs:sequence>
+			<xs:element name="codigo" type="xs:int" nillable="true" />
+			<xs:element name="descripcion" type="xs:string" nillable="true" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:complexType name="cuenta">
+		<xs:sequence>
+			<xs:element name="alias" type="xs:string" />
+			<xs:element name="numero" type="xs:integer" />
+			<xs:element name="nombre" type="xs:string" />
+			<xs:element name="producto" type="xs:int" />
+			<xs:element name="moneda" type="xs:string" />
+		</xs:sequence>
+	</xs:complexType>
+
+	<xs:simpleType name="stringRequiredThree">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="3" />
+			<xs:maxLength value="3" />
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="stringRequiredTwenty">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1" />
+			<xs:maxLength value="20" />
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="stringRequiredTwentyFive">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1" />
+			<xs:maxLength value="25" />
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="stringRequiredForty">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1" />
+			<xs:maxLength value="40" />
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="stringRequiredSixty">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1" />
+			<xs:maxLength value="60" />
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="stringRequiredOneHundred">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1" />
+			<xs:maxLength value="100" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:simpleType name="stringTwentyFive">
+		<xs:restriction base="xs:string">
+			<xs:maxLength value="25" />
+		</xs:restriction>
+	</xs:simpleType>
+
+</xs:schema>

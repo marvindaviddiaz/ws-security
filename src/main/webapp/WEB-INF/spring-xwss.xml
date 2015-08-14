@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:util="http://www.springframework.org/schema/util" xmlns:sws="http://www.springframework.org/schema/web-services"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans  
+          	http://www.springframework.org/schema/beans/spring-beans.xsd  
+            http://www.springframework.org/schema/web-services http://www.springframework.org/schema/web-services/web-services-2.0.xsd  
+            http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd 
+            http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+	
+	<bean id="cryptoFactoryBean" class="org.springframework.ws.soap.security.support.KeyStoreFactoryBean">
+        <property name="location" value="classpath:keystore/server.jks"/>
+        <property name="password" value="server1234"/>
+    </bean>
+	
+	<bean id="keyStoreCallbackHandler" class="org.springframework.ws.soap.security.xwss.callback.KeyStoreCallbackHandler">
+        <!-- FOR DECRYPT -->
+        <property name="keyStore" ref="cryptoFactoryBean"/>
+        <property name="privateKeyPassword" value="server1pass"/>
+        <!-- FOR VALIDATE SIGN -->
+        <property name="trustStore" ref="cryptoFactoryBean"/>
+        <!-- FOR SIGN -->
+        <property name="defaultAlias" value="server1"/>
+    </bean>
+
+	<bean id="passwordValidationHandler" class="org.springframework.ws.soap.security.xwss.callback.SpringDigestPasswordValidationCallbackHandler">
+		<property name="userDetailsService" ref="userDetailsService"/>
+	</bean>
+
+	<bean id="loginInterceptor" class="org.springframework.ws.soap.security.xwss.XwsSecurityInterceptor">
+			<property name="policyConfiguration" value="classpath:loginPolicy.xml" />
+			<property name="callbackHandlers">
+				<list>
+					<ref bean="passwordValidationHandler"/>
+					<ref bean="keyStoreCallbackHandler"/>
+				</list>
+			</property>
+	</bean>
+	
+	<bean id="securityInterceptor" class="org.springframework.ws.soap.security.xwss.XwsSecurityInterceptor">
+			<property name="policyConfiguration" value="classpath:securityPolicy.xml" />
+			<property name="callbackHandlers">
+				<list>
+					<ref bean="keyStoreCallbackHandler"/>
+				</list>
+			</property>
+	</bean>
+	
+</beans>

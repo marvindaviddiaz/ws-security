@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xwss:SecurityConfiguration xmlns:xwss="http://java.sun.com/xml/ns/xwss/config"
+	dumpMessages="true">
+
+
+	<xwss:RequireSignature requireTimestamp="false">
+		<xwss:X509Token />
+		<xwss:SignatureTarget type="qname" enforce="true" value="{http://schemas.xmlsoap.org/soap/envelope/}Body" />
+	</xwss:RequireSignature>
+
+	<xwss:RequireEncryption>
+		<xwss:EncryptionTarget type="qname" contentOnly="true" enforce="true" value="{http://schemas.xmlsoap.org/soap/envelope/}Body"/>
+	</xwss:RequireEncryption>
+	
+	<xwss:Encrypt >
+		<xwss:X509Token certificateAlias="trustedclient1" />
+		<xwss:EncryptionTarget type="qname" contentOnly="true" enforce="true" value="{http://schemas.xmlsoap.org/soap/envelope/}Body"/>
+	</xwss:Encrypt>
+	
+	<xwss:Sign includeTimestamp="false">
+		<xwss:SignatureTarget type="qname" enforce="true" value="{http://schemas.xmlsoap.org/soap/envelope/}Body" />
+	</xwss:Sign>
+
+
+</xwss:SecurityConfiguration>
