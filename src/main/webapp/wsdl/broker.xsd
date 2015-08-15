@@ -1,0 +1,77 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:tns="http://dto.eis.broker.sample.com/"
+	targetNamespace="http://dto.eis.broker.sample.com/" version="1.0">
+
+	<!-- GET_SESSION -->
+
+	<xs:element name="GetSessionRequest">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="accessType" type="tns:accessType" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="GetSessionResponse">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="error" type="tns:error" nillable="true"/>
+				<xs:element name="sesionId" type="xs:string" nillable="true"/>
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+
+	<!-- GET_BILLERS -->
+	
+	<xs:element name="GetCountriesRequest">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="sesionId" type="tns:stringRequiredForty" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	<xs:element name="GetCountriesResponse">
+		<xs:complexType>
+			<xs:sequence>
+				<xs:element name="error" type="tns:error" nillable="true"/>
+				<xs:element name="countries" type="tns:country" nillable="true" minOccurs="0" maxOccurs="unbounded" />
+			</xs:sequence>
+		</xs:complexType>
+	</xs:element>
+	
+	
+
+	<!-- COMMONS -->
+	
+	
+	<xs:simpleType name="stringRequiredForty">
+		<xs:restriction base="xs:string">
+			<xs:minLength value="1" />
+			<xs:maxLength value="40" />
+		</xs:restriction>
+	</xs:simpleType>
+	
+	<xs:simpleType name="accessType" >
+		<xs:restriction base="xs:string">
+			<xs:enumeration value="WEB" />
+			<xs:enumeration value="MOBILE" />
+		</xs:restriction>
+	</xs:simpleType>
+
+	<xs:complexType name="error">
+		<xs:sequence>
+			<xs:element name="codigo" type="xs:int" nillable="true"/>
+			<xs:element name="descripcion" type="xs:string" />
+		</xs:sequence>
+	</xs:complexType>
+	
+	<xs:complexType name="country">
+		<xs:sequence>
+			<xs:element name="codigo" type="xs:string"/>
+			<xs:element name="nombre" type="xs:string" />
+			<xs:element name="moneda" type="xs:string" />
+		</xs:sequence>
+	</xs:complexType>
+
+
+</xs:schema>

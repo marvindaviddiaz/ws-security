@@ -9,7 +9,7 @@
             http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
 
 
-	<context:component-scan base-package="com.bytesw" />
+	<context:component-scan base-package="com.sample" />
 	<context:annotation-config />
 	<sws:annotation-driven />
 
@@ -20,74 +20,19 @@
 	
 		<!-- ############### PASARELA  ###############  -->
 	
-<!-- 		<sws:payloadRoot namespaceUri="http://dto.eis.pasarela.hubpagos.bytesw.com/" localPart="GetSessionRequest"> -->
+<!-- 		<sws:payloadRoot namespaceUri="http://dto.eis.broker.sample.com/" localPart="GetSessionRequest"> -->
 <!-- 			<ref bean="loginInterceptor"/> -->
 <!-- 		</sws:payloadRoot> -->
-<!-- 		<sws:payloadRoot namespaceUri="http://dto.eis.pasarela.hubpagos.bytesw.com/" localPart="GetBillersRequest"> -->
+<!-- 		<sws:payloadRoot namespaceUri="http://dto.eis.broker.sample.com/" localPart="GetCountriesRequest"> -->
 <!-- 			<ref bean="securityInterceptor"/> -->
-<!-- 		</sws:payloadRoot> -->
-<!-- 		<sws:payloadRoot namespaceUri="http://dto.eis.pasarela.hubpagos.bytesw.com/" localPart="GetBalanceRequest"> -->
-<!-- 			<ref bean="securityInterceptor"/> -->
-<!-- 		</sws:payloadRoot> -->
-<!-- 		<sws:payloadRoot namespaceUri="http://dto.eis.pasarela.hubpagos.bytesw.com/" localPart="PayBillRequest"> -->
-<!-- 			<ref bean="securityInterceptor"/> -->
-<!-- 		</sws:payloadRoot> -->
 		
-		<sws:soapAction value="http://pasarela.hubpagos.bytesw.com/GetSession">
+		<sws:soapAction value="http://broker.sample.com/GetSession">
 			<ref bean="loginInterceptor"/>
 		</sws:soapAction>
-		<sws:soapAction value="http://pasarela.hubpagos.bytesw.com/GetBillers">
+		<sws:soapAction value="http://broker.sample.com/GetCountries">
 			<ref bean="securityInterceptor"/>
 		</sws:soapAction>
-		<sws:soapAction value="http://pasarela.hubpagos.bytesw.com/GetBalance">
-			<ref bean="securityInterceptor"/>
-		</sws:soapAction>
-		<sws:soapAction value="http://pasarela.hubpagos.bytesw.com/PayBill">
-			<ref bean="securityInterceptor"/>
-		</sws:soapAction>
-		
-		<!-- ############### BACKEND  ###############  -->
-		
-<!-- 		<sws:payloadRoot namespaceUri="http://dto.eis.backend.hubpagos.bytesw.com/" localPart="GetSessionRequest"> -->
-<!-- 			<ref bean="loginInterceptor"/> -->
-<!-- 		</sws:payloadRoot> -->
-<!-- 		<sws:payloadRoot namespaceUri="http://dto.eis.backend.hubpagos.bytesw.com/" localPart="ValidateSessionRequest"> -->
-<!-- 			<ref bean="securityInterceptor"/> -->
-<!-- 		</sws:payloadRoot> -->
-<!-- 		<sws:payloadRoot namespaceUri="http://dto.eis.backend.hubpagos.bytesw.com/" localPart="UserAccountsRequest"> -->
-<!-- 			<ref bean="securityInterceptor"/> -->
-<!-- 		</sws:payloadRoot> -->
-<!-- 		<sws:payloadRoot namespaceUri="http://dto.eis.backend.hubpagos.bytesw.com/" localPart="SecondAuthenticationRequest"> -->
-<!-- 			<ref bean="securityInterceptor"/> -->
-<!-- 		</sws:payloadRoot> -->
-<!-- 		<sws:payloadRoot namespaceUri="http://dto.eis.backend.hubpagos.bytesw.com/" localPart="ChargeAccountRequest"> -->
-<!-- 			<ref bean="securityInterceptor"/> -->
-<!-- 		</sws:payloadRoot> -->
-<!-- 		<sws:payloadRoot namespaceUri="http://dto.eis.backend.hubpagos.bytesw.com/" localPart="ReverseChargeRequest"> -->
-<!-- 			<ref bean="securityInterceptor"/> -->
-<!-- 		</sws:payloadRoot> -->
-		
-		<sws:soapAction value="http://backend.hubpagos.bytesw.com/GetSession">
-			<ref bean="loginInterceptor"/>
-		</sws:soapAction>
-		<sws:soapAction value="http://backend.hubpagos.bytesw.com/ValidateSession">
-			<ref bean="securityInterceptor"/>
-		</sws:soapAction>
-		<sws:soapAction value="http://backend.hubpagos.bytesw.com/UserAccounts">
-			<ref bean="securityInterceptor"/>
-		</sws:soapAction>
-		<sws:soapAction value="http://backend.hubpagos.bytesw.com/SecondAuthentication">
-			<ref bean="securityInterceptor"/>
-		</sws:soapAction>
-		<sws:soapAction value="http://backend.hubpagos.bytesw.com/ChargeAccount">
-			<ref bean="securityInterceptor"/>
-		</sws:soapAction>
-		<sws:soapAction value="http://backend.hubpagos.bytesw.com/ReverseCharge">
-			<ref bean="securityInterceptor"/>
-		</sws:soapAction>
-		
-
-		
+				
 		<!-- ############### GLOBAL  ###############  -->
 		<ref bean="validatingInterceptor"/>
 		
@@ -96,19 +41,11 @@
 	<!-- VALIDATION INTERCEPTOR -->
 	<!-- Interceptor que valida que todos los mensajes traigan SoapAction -->
 	<!-- xq sws:payloadRoot no encuentra el EndPoint cuando el body viene cifrado -->
-	<bean id="soapActionRequiredEndpointInterceptor" class="com.bytesw.hubpagos.ws.soap.server.endpoint.interceptor.SoapActionRequiredEndpointInterceptor">
+	<bean id="soapActionRequiredEndpointInterceptor" class="com.sample.broker.ws.soap.server.endpoint.interceptor.SoapActionRequiredEndpointInterceptor">
 		<property name="validSoapActions">
 			<list>
-				<value>http://pasarela.hubpagos.bytesw.com/GetSession</value>
-				<value>http://pasarela.hubpagos.bytesw.com/GetBillers</value>
-				<value>http://pasarela.hubpagos.bytesw.com/GetBalance</value>
-				<value>http://pasarela.hubpagos.bytesw.com/PayBill</value>
-				<value>http://backend.hubpagos.bytesw.com/GetSession</value>
-				<value>http://backend.hubpagos.bytesw.com/ValidateSession</value>
-				<value>http://backend.hubpagos.bytesw.com/UserAccounts</value>
-				<value>http://backend.hubpagos.bytesw.com/SecondAuthentication</value>
-				<value>http://backend.hubpagos.bytesw.com/ChargeAccount</value>
-				<value>http://backend.hubpagos.bytesw.com/ReverseCharge</value>
+				<value>http://broker.sample.com/GetSession</value>
+				<value>http://broker.sample.com/GetCountries</value>
 			</list>
 		</property>
 	</bean>
@@ -118,8 +55,8 @@
 	<bean id="validatingInterceptor" class="org.springframework.ws.soap.server.endpoint.interceptor.PayloadValidatingInterceptor">
 		<property name="schemas">
 			<list>
-				<value>classpath:wsdl/pasarela.xsd</value>
-				<value>classpath:wsdl/backend.xsd</value>
+				<value>/wsdl/broker.xsd</value>
+<!-- 				<value>classpath:wsdl/schema2.xsd</value> -->
 			</list>
 		</property>
 		<property name="validateRequest" value="true" />
@@ -134,7 +71,7 @@
 			<util:constant static-field="org.springframework.ws.soap.SoapVersion.SOAP_11" />
 		</property>
 	</bean>
-	<bean id="userDetailsService" class="com.bytesw.hubpagos.pasarela.bs.service.UserDetailsServiceImpl">
+	<bean id="userDetailsService" class="com.sample.broker.bs.service.UserDetailsServiceImpl">
     </bean>
     
     

@@ -28,7 +28,7 @@
 	</bean>
 
 	<bean id="loginInterceptor" class="org.springframework.ws.soap.security.xwss.XwsSecurityInterceptor">
-			<property name="policyConfiguration" value="classpath:loginPolicy.xml" />
+			<property name="policyConfiguration" value="/WEB-INF/policyLogin.xml" />
 			<property name="callbackHandlers">
 				<list>
 					<ref bean="passwordValidationHandler"/>
@@ -38,7 +38,7 @@
 	</bean>
 	
 	<bean id="securityInterceptor" class="org.springframework.ws.soap.security.xwss.XwsSecurityInterceptor">
-			<property name="policyConfiguration" value="classpath:securityPolicy.xml" />
+			<property name="policyConfiguration" value="/WEB-INF/policySecurity.xml" />
 			<property name="callbackHandlers">
 				<list>
 					<ref bean="keyStoreCallbackHandler"/>

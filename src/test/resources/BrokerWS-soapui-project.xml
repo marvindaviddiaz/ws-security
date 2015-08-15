@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<con:soapui-project activeEnvironment="Default" name="BrokerWS" resourceRoot="" soapui-version="4.6.4" abortOnError="false" runType="SEQUENTIAL" xmlns:con="http://eviware.com/soapui/config"><con:settings/><con:interface xsi:type="con:WsdlInterface" wsaVersion="NONE" name="BrokerHTTPPortBinding" type="wsdl" bindingName="{http://dto.eis.broker.sample.com/}BrokerHTTPPortBinding" soapVersion="1_1" anonymous="optional" definition="http://localhost:8080/ws-security/wsdl/BrokerWS.wsdl" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"><con:settings/><con:definitionCache type="TEXT" rootPart="http://localhost:8080/ws-security/wsdl/BrokerWS.wsdl"><con:part><con:url>http://localhost:8080/ws-security/wsdl/BrokerWS.wsdl</con:url><con:content><![CDATA[<wsdl:definitions targetNamespace="http://dto.eis.broker.sample.com/" xmlns="http://schemas.xmlsoap.org/wsdl/" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:schema="http://dto.eis.broker.sample.com/" xmlns:tns="http://dto.eis.broker.sample.com/" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" xmlns:wsaws="http://www.w3.org/2005/08/addressing" xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy" xmlns:sp13="http://docs.oasis-open.org/ws-sx/ws-securitypolicy/200802" xmlns:sc="http://schemas.sun.com/2006/03/wss/server" xmlns:wspp="http://java.sun.com/xml/ns/wsit/policy">
+  <!--Schema Import-->
+  <wsdl:types>
+    <xsd:schema>
+      <xsd:import namespace="http://dto.eis.broker.sample.com/" schemaLocation="broker.xsd"/>
+    </xsd:schema>
+  </wsdl:types>
+  <!--Messages: Request and Response used in portType-->
+  <wsdl:message name="GetSessionRequest">
+    <wsdl:part name="parameters" element="schema:GetSessionRequest"/>
+  </wsdl:message>
+  <wsdl:message name="GetSessionResponse">
+    <wsdl:part name="parameters" element="schema:GetSessionResponse"/>
+  </wsdl:message>
+  <wsdl:message name="GetCountriesRequest">
+    <wsdl:part name="parameters" element="schema:GetCountriesRequest"/>
+  </wsdl:message>
+  <wsdl:message name="GetCountriesResponse">
+    <wsdl:part name="parameters" element="schema:GetCountriesResponse"/>
+  </wsdl:message>
+  <!--PortType used en binding-->
+  <wsdl:portType name="BrokerEndpoint">
+    <wsdl:operation name="GetSession">
+      <wsdl:input message="tns:GetSessionRequest"/>
+      <wsdl:output message="tns:GetSessionResponse"/>
+    </wsdl:operation>
+    <wsdl:operation name="GetCountries">
+      <wsdl:input message="tns:GetCountriesRequest"/>
+      <wsdl:output message="tns:GetCountriesResponse"/>
+    </wsdl:operation>
+  </wsdl:portType>
+  <!--Binding: operations-->
+  <wsdl:binding name="BrokerHTTPPortBinding" type="tns:BrokerEndpoint">
+    <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+    <wsdl:operation name="GetSession">
+      <soap:operation soapAction="http://broker.sample.com/GetSession"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+        <wsp:PolicyReference URI="#GetSessionInputPolicy"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+        <wsp:PolicyReference URI="#GetSessionOutputPolicy"/>
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="GetCountries">
+      <soap:operation soapAction="http://broker.sample.com/GetCountries"/>
+      <wsdl:input>
+        <soap:body use="literal"/>
+        <wsp:PolicyReference URI="#SecurityInputPolicy"/>
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal"/>
+        <wsp:PolicyReference URI="#SecurityOutputPolicy"/>
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <!--service-->
+  <wsdl:service name="BrokerService">
+    <wsdl:port name="BrokerHTTPPort" binding="tns:BrokerHTTPPortBinding">
+      <soap:address location="http://localhost:8080/ws-security/services/BrokerWS"/>
+    </wsdl:port>
+  </wsdl:service>
+  <!--policies-->
+  <wsp:Policy wsu:Id="GetSessionInputPolicy">
+    <wsp:All>
+      <sp:UsernameToken sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/AlwaysToRecipient">
+        <wsp:Policy>
+          <sp:WssUsernameToken11/>
+          <sp:HashPassword/>
+          <sp13:Created/>
+          <sp13:Nonce/>
+        </wsp:Policy>
+      </sp:UsernameToken>
+      <sp:EncryptedParts>
+        <sp:Header Name="UsernameToken" Namespace="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"/>
+      </sp:EncryptedParts>
+      <sp:SignedParts>
+        <sp:Header Name="UsernameToken" Namespace="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"/>
+      </sp:SignedParts>
+    </wsp:All>
+  </wsp:Policy>
+  <wsp:Policy wsu:Id="GetSessionOutputPolicy">
+    <wsp:All>
+      <sp:EncryptedParts>
+        <sp:Body/>
+      </sp:EncryptedParts>
+      <sp:SignedParts>
+        <sp:Body/>
+      </sp:SignedParts>
+    </wsp:All>
+  </wsp:Policy>
+  <wsp:Policy wsu:Id="SecurityInputPolicy">
+    <wsp:All>
+      <sp:EncryptedParts>
+        <sp:Body/>
+      </sp:EncryptedParts>
+      <sp:SignedParts>
+        <sp:Body/>
+      </sp:SignedParts>
+    </wsp:All>
+  </wsp:Policy>
+  <wsp:Policy wsu:Id="SecurityOutputPolicy">
+    <wsp:All>
+      <sp:EncryptedParts>
+        <sp:Body/>
+      </sp:EncryptedParts>
+      <sp:SignedParts>
+        <sp:Body/>
+      </sp:SignedParts>
+    </wsp:All>
+  </wsp:Policy>
+</wsdl:definitions>]]></con:content><con:type>http://schemas.xmlsoap.org/wsdl/</con:type></con:part><con:part><con:url>http://localhost:8080/ws-security/wsdl/broker.xsd</con:url><con:content><![CDATA[<xs:schema targetNamespace="http://dto.eis.broker.sample.com/" version="1.0" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:tns="http://dto.eis.broker.sample.com/">
+  <!--GET_SESSION-->
+  <xs:element name="GetSessionRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="accessType" type="tns:accessType"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetSessionResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="error" type="tns:error" nillable="true"/>
+        <xs:element name="sesionId" type="xs:string" nillable="true"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <!--GET_BILLERS-->
+  <xs:element name="GetCountriesRequest">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="sesionId" type="tns:stringRequiredForty"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GetCountriesResponse">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="error" type="tns:error" nillable="true"/>
+        <xs:element name="countries" type="tns:country" nillable="true" minOccurs="0" maxOccurs="unbounded"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+  <!--COMMONS-->
+  <xs:simpleType name="stringRequiredForty">
+    <xs:restriction base="xs:string">
+      <xs:minLength value="1"/>
+      <xs:maxLength value="40"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:simpleType name="accessType">
+    <xs:restriction base="xs:string">
+      <xs:enumeration value="WEB"/>
+      <xs:enumeration value="MOBILE"/>
+    </xs:restriction>
+  </xs:simpleType>
+  <xs:complexType name="error">
+    <xs:sequence>
+      <xs:element name="codigo" type="xs:int" nillable="true"/>
+      <xs:element name="descripcion" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+  <xs:complexType name="country">
+    <xs:sequence>
+      <xs:element name="codigo" type="xs:string"/>
+      <xs:element name="nombre" type="xs:string"/>
+      <xs:element name="moneda" type="xs:string"/>
+    </xs:sequence>
+  </xs:complexType>
+</xs:schema>]]></con:content><con:type>http://www.w3.org/2001/XMLSchema</con:type></con:part></con:definitionCache><con:endpoints><con:endpoint>http://localhost:8080/ws-security/services/BrokerWS</con:endpoint></con:endpoints><con:operation isOneWay="false" action="http://broker.sample.com/GetCountries" name="GetCountries" bindingOperationName="GetCountries" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="Request 1" outgoingWss="Generic" incomingWss="LoginAndGeneric"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/ws-security/services/BrokerWS</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:dto="http://dto.eis.broker.sample.com/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <dto:GetCountriesRequest>
+         <sesionId>554/q*-a4df^#(@7245-2rs*/df</sesionId>
+      </dto:GetCountriesRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://broker.sample.com/GetCountries"/><con:wsrmConfig version="1.2"/></con:call></con:operation><con:operation isOneWay="false" action="http://broker.sample.com/GetSession" name="GetSession" bindingOperationName="GetSession" type="Request-Response" inputName="" receivesAttachments="false" sendsAttachments="false" anonymous="optional"><con:settings/><con:call name="Request 1" outgoingWss="Login" incomingWss="LoginAndGeneric"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:encoding>UTF-8</con:encoding><con:endpoint>http://localhost:8080/ws-security/services/BrokerWS</con:endpoint><con:request><![CDATA[<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:dto="http://dto.eis.broker.sample.com/">
+   <soapenv:Header/>
+   <soapenv:Body>
+      <dto:GetSessionRequest>
+         <accessType>WEB</accessType>
+      </dto:GetSessionRequest>
+   </soapenv:Body>
+</soapenv:Envelope>]]></con:request><con:credentials><con:authType>Global HTTP Settings</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:wsaConfig mustUnderstand="NONE" version="200508" action="http://broker.sample.com/GetSession"/><con:wsrmConfig version="1.2"/></con:call></con:operation></con:interface><con:properties/><con:wssContainer><con:crypto><con:source>/TOOLS/workspaces/TEST/ws-security/src/main/resources/keystore/client1ks.jks</con:source><con:password>test1234</con:password><con:type>KEYSTORE</con:type><con:defaultAlias/><con:aliasPassword/></con:crypto><con:incoming><con:name>LoginAndGeneric</con:name><con:decryptCrypto>client1ks.jks</con:decryptCrypto><con:signatureCrypto>client1ks.jks</con:signatureCrypto><con:decryptPassword>client1pass</con:decryptPassword></con:incoming><con:outgoing><con:name>Login</con:name><con:username/><con:entry type="Username" username="mdiaz" password="d033e22ae348aeb5660fc2140aec35850c4da997"><con:configuration><addCreated>true</addCreated><addNonce>true</addNonce><passwordType>PasswordDigest</passwordType></con:configuration></con:entry><con:entry type="Encryption" username="trustedserver"><con:configuration><crypto>client1ks.jks</crypto><keyIdentifierType>0</keyIdentifierType><symmetricEncAlgorithm/><encKeyTransport/><embeddedKeyName/><embeddedKeyPassword/><encryptionCanonicalization/><encryptSymmetricKey>true</encryptSymmetricKey><encryptionPart><![CDATA[<xml-fragment xmlns:con="http://eviware.com/soapui/config">
+  <con:entry key="id" value=""/>
+  <con:entry key="name" value="UsernameToken"/>
+  <con:entry key="enc" value="Content"/>
+  <con:entry key="namespace" value="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"/>
+</xml-fragment>]]></encryptionPart></con:configuration></con:entry><con:entry type="Signature" username="client1" password="client1pass"><con:configuration><crypto>client1ks.jks</crypto><keyIdentifierType>0</keyIdentifierType><signatureAlgorithm/><signatureCanonicalization/><useSingleCert>true</useSingleCert><digestAlgorithm>http://www.w3.org/2000/09/xmldsig#sha1</digestAlgorithm><signaturePart><![CDATA[<xml-fragment xmlns:con="http://eviware.com/soapui/config">
+  <con:entry key="id" value=""/>
+  <con:entry key="name" value="UsernameToken"/>
+  <con:entry key="enc" value="Content"/>
+  <con:entry key="namespace" value="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd"/>
+</xml-fragment>]]></signaturePart></con:configuration></con:entry></con:outgoing><con:outgoing><con:name>Generic</con:name><con:entry type="Encryption" username="trustedserver"><con:configuration><crypto>client1ks.jks</crypto><keyIdentifierType>0</keyIdentifierType><symmetricEncAlgorithm/><encKeyTransport/><embeddedKeyName/><embeddedKeyPassword/><encryptionCanonicalization/><encryptSymmetricKey>true</encryptSymmetricKey><encryptionPart><![CDATA[<xml-fragment xmlns:con="http://eviware.com/soapui/config">
+  <con:entry key="id" value=""/>
+  <con:entry key="name" value="Body"/>
+  <con:entry key="enc" value="Content"/>
+  <con:entry key="namespace" value="http://schemas.xmlsoap.org/soap/envelope/"/>
+</xml-fragment>]]></encryptionPart></con:configuration></con:entry><con:entry type="Signature" username="client1" password="client1pass"><con:configuration><crypto>client1ks.jks</crypto><keyIdentifierType>0</keyIdentifierType><signatureAlgorithm/><signatureCanonicalization/><useSingleCert>true</useSingleCert><digestAlgorithm>http://www.w3.org/2000/09/xmldsig#sha1</digestAlgorithm><signaturePart><![CDATA[<xml-fragment xmlns:con="http://eviware.com/soapui/config">
+  <con:entry key="id" value=""/>
+  <con:entry key="name" value="Body"/>
+  <con:entry key="enc" value="Content"/>
+  <con:entry key="namespace" value="http://schemas.xmlsoap.org/soap/envelope/"/>
+</xml-fragment>]]></signaturePart></con:configuration></con:entry></con:outgoing></con:wssContainer><con:sensitiveInformation/></con:soapui-project>

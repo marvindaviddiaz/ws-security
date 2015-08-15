@@ -1,8 +1,5 @@
 package com.bytesw.hubpagos.pasarela;
 
-import java.math.BigDecimal;
-import java.math.BigInteger;
-
 import javax.security.auth.callback.CallbackHandler;
 
 import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
@@ -21,16 +18,11 @@ import org.springframework.ws.soap.security.xwss.XwsSecurityInterceptor;
 import org.springframework.ws.soap.security.xwss.callback.KeyStoreCallbackHandler;
 import org.springframework.ws.soap.security.xwss.callback.SimpleUsernamePasswordCallbackHandler;
 
-import com.bytesw.hubpagos.pasarela.eis.dto.CamposCobranza;
-import com.bytesw.hubpagos.pasarela.eis.dto.Canal;
-import com.bytesw.hubpagos.pasarela.eis.dto.GetBalanceRequest;
-import com.bytesw.hubpagos.pasarela.eis.dto.GetBalanceResponse;
-import com.bytesw.hubpagos.pasarela.eis.dto.GetBillersRequest;
-import com.bytesw.hubpagos.pasarela.eis.dto.GetBillersResponse;
-import com.bytesw.hubpagos.pasarela.eis.dto.GetSessionRequest;
-import com.bytesw.hubpagos.pasarela.eis.dto.GetSessionResponse;
-import com.bytesw.hubpagos.pasarela.eis.dto.PayBillRequest;
-import com.bytesw.hubpagos.pasarela.eis.dto.PayBillResponse;
+import com.sample.broker.eis.dto.AccessType;
+import com.sample.broker.eis.dto.GetCountriesRequest;
+import com.sample.broker.eis.dto.GetCountriesResponse;
+import com.sample.broker.eis.dto.GetSessionRequest;
+import com.sample.broker.eis.dto.GetSessionResponse;
 
 public class PasarelaTest {
 
@@ -48,7 +40,7 @@ public class PasarelaTest {
 			messageFactory.setSoapVersion(SoapVersion.SOAP_11);
 			messageFactory.afterPropertiesSet();
 
-			marshaller.setPackagesToScan(new String[] { "com.bytesw.hubpagos.pasarela.eis.dto" });
+			marshaller.setPackagesToScan(new String[] { "com.sample.broker.eis.dto" });
 			marshaller.afterPropertiesSet();
 
 			keyStoreJKS.setLocation(new ClassPathResource("keystore/client1ks.jks"));
@@ -86,10 +78,8 @@ public class PasarelaTest {
 	@Test
 	public void test() {
 		try {
-			String sessionId = this.getSession();
-			this.getBillers(sessionId);
-			this.getBalance(sessionId);
-			this.payBill(sessionId);
+			String sessionId = "asdf";//this.getSession();
+			this.getCountries(sessionId);
 		} catch (Exception e) {
 			e.printStackTrace();
 			Assert.fail(e.getMessage());
@@ -116,17 +106,17 @@ public class PasarelaTest {
 		 * No valor significa que no hay ninguna indicación de la intención del
 		 * mensaje.
 		 */
-		ClientMessageCallBack callbackForSoapAction = new ClientMessageCallBack("http://pasarela.hubpagos.bytesw.com/GetSession");
+		ClientMessageCallBack callbackForSoapAction = new ClientMessageCallBack("http://broker.sample.com/GetSession");
 
 		GetSessionRequest req = new GetSessionRequest();
-		req.setCanal(Canal.IB);
-		GetSessionResponse resp = (GetSessionResponse) template.marshalSendAndReceive("http://localhost:8080/servicios-hub/services/PasarelaWS", req, callbackForSoapAction);
+		req.setAccessType(AccessType.WEB);
+		GetSessionResponse resp = (GetSessionResponse) template.marshalSendAndReceive("http://localhost:8080/ws-security/services/BrokerWS", req, callbackForSoapAction);
 
 		System.out.println("#### RESPUESTA: " + ReflectionToStringBuilder.reflectionToString(resp, ToStringStyle.MULTI_LINE_STYLE));
 		return resp.getSesionId();
 	}
 
-	public void getBillers(String sessionId) throws Exception {
+	public void getCountries(String sessionId) throws Exception {
 
 		XwsSecurityInterceptor i = new XwsSecurityInterceptor();
 		i.setPolicyConfiguration(new ClassPathResource("clientSecurityPolicy.xml"));
@@ -136,57 +126,12 @@ public class PasarelaTest {
 		template.setInterceptors(new ClientInterceptor[] { i });
 		template.afterPropertiesSet();
 
-		ClientMessageCallBack callbackForSoapAction = new ClientMessageCallBack("http://pasarela.hubpagos.bytesw.com/GetBillers");
-		GetBillersRequest req = new GetBillersRequest();
+		ClientMessageCallBack callbackForSoapAction = new ClientMessageCallBack("http://broker.sample.com/GetCountries");
+		GetCountriesRequest req = new GetCountriesRequest();
 		req.setSesionId(sessionId);
-		GetBillersResponse resp = (GetBillersResponse) template.marshalSendAndReceive("http://localhost:8080/servicios-hub/services/PasarelaWS", req, callbackForSoapAction);
+		GetCountriesResponse resp = (GetCountriesResponse) template.marshalSendAndReceive("http://localhost:8080/ws-security/services/BrokerWS", req, callbackForSoapAction);
 		System.out.println("#### RESPUESTA: " + ReflectionToStringBuilder.reflectionToString(resp, ToStringStyle.MULTI_LINE_STYLE));
 	}
 
-	public void getBalance(String sessionId) throws Exception {
-
-		XwsSecurityInterceptor i = new XwsSecurityInterceptor();
-		i.setPolicyConfiguration(new ClassPathResource("clientSecurityPolicy.xml"));
-		i.setCallbackHandlers(new CallbackHandler[] { keyStoreForEncryptAndSign });
-		i.afterPropertiesSet();
-
-		template.setInterceptors(new ClientInterceptor[] { i });
-		template.afterPropertiesSet();
-
-		ClientMessageCallBack callbackForSoapAction = new ClientMessageCallBack("http://pasarela.hubpagos.bytesw.com/GetBalance");
-		GetBalanceRequest req = new GetBalanceRequest();
-		req.setSesionId(sessionId);
-		req.setIdConsulta("12345");
-		req.setCamposCobranza(new CamposCobranza());
-		req.getCamposCobranza().setCampo1("Alfredo Avila");
-		req.getCamposCobranza().setCampo2("0900-10-4557");
-		GetBalanceResponse resp = (GetBalanceResponse) template.marshalSendAndReceive("http://localhost:8080/servicios-hub/services/PasarelaWS", req, callbackForSoapAction);
-		System.out.println("#### RESPUESTA: " + ReflectionToStringBuilder.reflectionToString(resp, ToStringStyle.MULTI_LINE_STYLE));
-	}
-
-	public void payBill(String sessionId) throws Exception {
-
-		XwsSecurityInterceptor i = new XwsSecurityInterceptor();
-		i.setPolicyConfiguration(new ClassPathResource("clientSecurityPolicy.xml"));
-		i.setCallbackHandlers(new CallbackHandler[] { keyStoreForEncryptAndSign });
-		i.afterPropertiesSet();
-
-		template.setInterceptors(new ClientInterceptor[] { i });
-		template.afterPropertiesSet();
-
-		ClientMessageCallBack callbackForSoapAction = new ClientMessageCallBack("http://pasarela.hubpagos.bytesw.com/PayBill");
-		PayBillRequest req = new PayBillRequest();
-		req.setSesionId(sessionId);
-		req.setCamposCobranza(new CamposCobranza());
-		req.setNumeroCuenta(new BigInteger("01510139976"));
-		req.setIdPago("12345");
-		req.setMoneda("QTZ");
-		req.setSubTotal(BigDecimal.TEN);
-		req.setImpuestos(BigDecimal.TEN);
-		req.setTotal(BigDecimal.TEN);
-		
-		PayBillResponse resp = (PayBillResponse) template.marshalSendAndReceive("http://localhost:8080/servicios-hub/services/PasarelaWS", req, callbackForSoapAction);
-		System.out.println("#### RESPUESTA: " + ReflectionToStringBuilder.reflectionToString(resp, ToStringStyle.MULTI_LINE_STYLE));
-	}
-
+	
 }
