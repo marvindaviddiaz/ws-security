@@ -3,8 +3,10 @@
 	dumpMessages="true">
 
 	<xwss:Encrypt >
-		<xwss:X509Token certificateAlias="trustedserver" keyReferenceType="IssuerSerialNumber"/>
-		<xwss:EncryptionTarget type="qname" contentOnly="true" enforce="true" value="{http://schemas.xmlsoap.org/soap/envelope/}Body"/>
+		    		<xwss:X509Token certificateAlias="trustedserver" keyReferenceType="IssuerSerialNumber" />
+		    		<xwss:KeyEncryptionMethod algorithm="http://www.w3.org/2001/04/xmlenc#rsa-1_5" />
+		    		<xwss:DataEncryptionMethod algorithm="http://www.w3.org/2001/04/xmlenc#aes128-cbc" />
+		    		<xwss:EncryptionTarget type="qname" contentOnly="true" enforce="false" value="{http://schemas.xmlsoap.org/soap/envelope/}Body"/>
 	</xwss:Encrypt>
 	
 	<xwss:Sign includeTimestamp="false">
