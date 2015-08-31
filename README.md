@@ -1,6 +1,6 @@
 # README #
 
-La configuracion de wss4j, permite que cada clientes utilice su propio key-pair(unico por cliente), y el servidor utilice un mismo key-pair para responder a todos los usuarios.
+La configuracion de wss4j, permite que cada cliente utilice su propio key-pair(unico por cliente), y el servidor utilice un mismo key-pair para responder a todos los usuarios.
 
 ### Intercambio de llaves ###
 
