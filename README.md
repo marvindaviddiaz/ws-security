@@ -1,11 +1,11 @@
 # README #
 
-This README would normally document whatever steps are necessary to get your application up and running.
+La configuracion de wss4j, permite que cada clientes utilice su propio key-pair(unico por cliente), y el servidor utilice un mismo key-pair para responder a todos los usuarios.
 
-### What is this repository for? ###
+### Intercambio de llaves ###
 
-* Quick summary
-* Version
+* El cliente debe tener la llave publica del server
+* El server debe tener la llave publica de todos los clientes
 * [Learn Markdown](https://bitbucket.org/tutorials/markdowndemo)
 
 ### How do I get set up? ###
